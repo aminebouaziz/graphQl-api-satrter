@@ -6,7 +6,8 @@ const rootResolver = {
   },
   Mutation: {
     login: authResolver.login,
-    createEvent: eventResolver.createEvent
+    createEvent: eventResolver.createEvent,
+    creatUser: authResolver.creatUser
   }
 };
 module.exports = rootResolver;

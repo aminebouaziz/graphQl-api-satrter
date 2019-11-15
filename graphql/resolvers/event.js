@@ -3,6 +3,12 @@ const User = require("../../models/User");
 
 const { user } = require("./merge");
 
+// context: ({ req, res }) => {
+//   if (req.query.accessToken)
+//     req.headers = { Authorization: `Apikey ${req.query.accessToken}` };
+
+// };
+
 module.exports = {
   events: _ => {
     return Event.find()
@@ -19,14 +25,16 @@ module.exports = {
   },
 
   createEvent: (_, args, req) => {
-    if (!req.isAuth) {
+    if (!req.req.isAuth) {
       throw new Error("You need to auth");
     }
+    console.log(req.req.userId);
+
     const event = new Event({
       title: args.eventInput.title,
       description: args.eventInput.description,
       price: +args.eventInput.price,
-      creator: req.userId
+      creator: req.req.userId
     });
     let createdEvent;
     return event
@@ -36,7 +44,7 @@ module.exports = {
           ...result._doc,
           creator: user.bind(this, result._doc.creator)
         };
-        return User.findById(req.userId);
+        return User.findById(req.req.userId);
       })
       .then(user => {
         if (!user) {
@@ -46,11 +54,9 @@ module.exports = {
         return user.save();
       })
       .then(result => {
-        console.log(result);
         return createdEvent;
       })
       .catch(err => {
-        console.log(err);
         throw err;
       });
   }

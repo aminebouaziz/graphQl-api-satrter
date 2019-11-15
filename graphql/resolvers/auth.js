@@ -6,6 +6,7 @@ module.exports = {
   creatUser: (_, args) => {
     return User.findOne({ email: args.userInput.email })
       .then(user => {
+        console.log("hello");
         if (user) {
           throw new Error("User already exist");
         }

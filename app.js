@@ -17,7 +17,16 @@ app.use(isAuth);
 
 const server = new ApolloServer({
   typeDefs,
-  resolvers
+  resolvers,
+  formatError: error => {
+    return error;
+  },
+  context: ({ req, res }) => {
+    return {
+      req,
+      res
+    };
+  }
 });
 
 server.applyMiddleware({ app });
